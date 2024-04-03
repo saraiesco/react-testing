@@ -26,9 +26,14 @@ test('Button should render', () => {
  * Verify clicking button should change theme
  * hint: use fireEvent.click(element) to trigger a click event on an element
  */
-test('theme button should update button text', () => {
+test('theme button should update button text', async () => {
   // TODO: change the expect to actually test something 😉
-  expect('no test written').toBe('tested');
+  const { getByText, rerender } = render(<App />);
+  const button = getByText(/Current theme: light/i);
+  fireEvent.click(button);
+  rerender(<App />);
+  const updatedThemeText = getByText(/Current theme: dark/i);
+  expect(updatedThemeText.textContent).toBe('Current theme: dark');
 });
 
 // BONUS
