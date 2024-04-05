@@ -1,7 +1,7 @@
 /** @jest-environment jsdom */
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, queryByText } from '@testing-library/react';
+import { render, screen, fireEvent, queryByText , getByText} from '@testing-library/react';
 import { App } from './App';
 
 /**
@@ -14,7 +14,6 @@ test('App should render', () => {
 });
 
 test('Button should render', () => {
-  // TODO: change the expect to actually test something 😉
     const { getByText } = render(<App />);
 
     const button = getByText(/Current theme: light/i);
@@ -27,7 +26,6 @@ test('Button should render', () => {
  * hint: use fireEvent.click(element) to trigger a click event on an element
  */
 test('theme button should update button text', async () => {
-  // TODO: change the expect to actually test something 😉
   const { getByText, rerender } = render(<App />);
   const button = getByText(/Current theme: light/i);
   fireEvent.click(button);
@@ -41,11 +39,11 @@ test('theme button should update button text', async () => {
 // e.g.: expect(element).toHaveStyle('color: #FFF');
 test('theme button should toggle styles', () => {
   // TODO: change the expect to actually test something 😉
-  const { getByText, rerender } = render(<App />);
+  const { getByText} = render(<App />);
   const button = getByText(/Current theme: light/i);
-  expect(button).toHaveStyle('color: #333333');
-  rerender(<App />);
-  expect(button).toHaveStyle('color: #ffffff');
+  const {body} = document;
+  fireEvent.click(button);
+  expect(body).toHaveStyle('color: rgb(255,255,255)');
 });
 
 /**
@@ -59,13 +57,22 @@ test('theme button should toggle styles', () => {
  */
 test('hidden button should toggle hidden content', () => {
   // TODO: change the expect to actually test something 😉
-  const { queryByText, getByText, rerender } = render(<App />);
-  const hiddenText= queryByText(/this content is hidden by default/i)
-  expect(hiddenText).not.toBeInTheDocument()
-  const button = getByText(/Show hidden content/i);
-  fireEvent.click(button);
-  rerender(<App />);
+  // const { queryByText, getByText, rerender } = render(<App />);
+  // const hiddenText= queryByText(/this content is hidden by default/i)
+  // expect(hiddenText).not.toBeInTheDocument()
+  // const button = getByText(/Show hidden content/i);
+  // fireEvent.click(button);
+  // rerender(<App />);
+  // expect(hiddenText).toBeInTheDocument()
+  render (<App/>)
+  const button = screen.getByText ("Show hidden content")
+  fireEvent.click(button)
+  let hiddenText= screen.getByText("this content is hidden by default")
   expect(hiddenText).toBeInTheDocument()
+  fireEvent.click(button)
+     hiddenText= screen.queryByText("this content is hidden by default")
+      expect(hiddenText).not.toBeInTheDocument()
+
 });
 
 
